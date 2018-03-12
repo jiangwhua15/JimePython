@@ -1,0 +1,4 @@
+#忽略ider
+.idea/
+venv/
+
