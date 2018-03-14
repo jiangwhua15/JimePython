@@ -11,9 +11,13 @@ class BaiduSpider(scrapy.Spider):
             #去除搜狗正版小说结果，要钱的不要
             #if len(sel.xpath('.//img[contains(@class,"vr_authico")]').extract()) == 0  :
             if ''.join(sel.xpath('.//a[contains(@id,"title")]/@href').extract()).find('sogou') < 0 :
-                novelInfo = re.findall("作者：(.*)类型：(.*)状态：(.*)简介：(.*)新：",''.join(sel.xpath('.//text()').extract()).replace('\n','').replace(' ',''))
-                print(novelInfo)
-                print(sel.xpath('.//a[contains(@id,"title")]/@href').extract())
-                for s in sel.xpath('.//a[contains(@id,"title")]/@href').extract() :
-                    res = urlparse(s).netloc
-                    print(res)
+                novelInfo = re.findall("作者：(.*)类型：(.*)状态：(.*)简介：(.*)新：",''.join(sel.xpath('.//text()').extract()).replace('\n','').replace("\x20",''))
+                key_tuple = ('author','category','novelstatus','des')
+                d = dict(zip(key_tuple,novelInfo[0]))
+
+                url = sel.xpath('.//a[contains(@id,"title")]/@href').extract()[0]
+                d['domain'] = urlparse(url).netloc
+                yield Request(url,self.get_name,meta=d)
+
+    def get_name(self,reponse):
+        print(reponse.meta)
