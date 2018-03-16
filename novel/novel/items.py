@@ -27,6 +27,7 @@ class NovelItem(scrapy.Item):
     name_id = scrapy.Field()
     #小说描述
     des = scrapy.Field()
-
+    #小说图片地址
+    novelImg = scrapy.Field()
 
 
